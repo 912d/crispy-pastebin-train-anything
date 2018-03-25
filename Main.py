@@ -24,10 +24,9 @@ class PastebinScraper():
             pasteText = req.read()
             length = len(pasteText)
             self.client.captureMessage('Retrieved paste length: ' + str(length))
-            file = open('np/'+paste_key, "w")
+            file = open('p2/'+paste_key, "w")
             file.write(pasteText)
             file.close()
-            print(pasteText)
             return pasteText
         except IOError as e:
             print("[!] API Error:", e)
@@ -40,38 +39,36 @@ class PastebinScraper():
                 host="localhost",
                 user="root",
                 passwd="nanomader#!$!%(",
-                db="pastebin")
+                db="pastebin",
+                use_unicode=True,
+                charset="utf8mb4"
+            )
             self.conn.set_character_set('utf8')
             self.cursor = self.conn.cursor()
-            self.cursor.execute('SET NAMES utf8;')
-            self.cursor.execute('SET CHARACTER SET utf8;')
-            self.cursor.execute('SET character_set_connection=utf8;')
+            self.cursor.execute('SET NAMES utf8mb4;')
+            self.cursor.execute('SET CHARACTER SET utf8mb4;')
+            self.cursor.execute('SET character_set_connection=utf8mb4;')
         except Exception as e:
             print("[!] API Error:", e)
             self.client.captureException()
 
     def scraper(self):
         data, limit = self.getlimiteddata()
-        secs = 100
         self.client.captureMessage('Starting looping through pastes')
+        print('Starting looping through pastes')
 
         for d in range(limit):
             self.client.context.activate()
             self.client.context.merge({'pasteKey': data[d]["key"]})
             txt = self.getPasteText(data[d]["key"])
-            print(txt)
             try:
-                self.cursor.execute("""INSERT INTO P 
-                (fullurl, pastedate, pastekey, size, expire, title, syntax, user, txt)
-                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""", (data[d]["full_url"], data[d]["date"], data[d]["key"], data[d]["size"], data[d]["expire"], data[d]["title"], data[d]["syntax"], data[d]["user"], str(txt)))
+                self.cursor.execute(u"""INSERT INTO P2 (fullurl, pastedate, pastekey, size, expire, title, syntax, user, txt)
+                 VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""", (data[d]["full_url"], data[d]["date"], data[d]["key"], data[d]["size"], data[d]["expire"], data[d]["title"], data[d]["syntax"], data[d]["user"], txt))
                 self.conn.commit()
             except Exception as e:
                 print("[!] API Error:", e)
                 self.client.captureException()
             self.client.context.clear()
-        msg = str(limit) + ' pastes took'
-        print(msg)
-        self.client.captureMessage(msg)
 
 
     def getlimiteddata(self):
