@@ -1,3 +1,4 @@
+# -- coding: utf-8 --
 import config
 
 class Properties():
@@ -7,3 +8,5 @@ class Properties():
     database = config.db
     table = config.table
     charset = config.charset
+    restlogger = config.restlogger
+    pastedirectory = config.pastedirectory
