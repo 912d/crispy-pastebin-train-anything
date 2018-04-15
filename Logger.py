@@ -5,7 +5,7 @@ from Properties import Properties
 
 
 def log(header, data):
-    data = str(datetime.datetime.now()) + " " + str(data)
+    data = str(data)
     data = urllib2.quote(data)
     header = urllib2.quote(header)
     url = Properties.restlogger + '/add?header=' + header + '&data=' + data
