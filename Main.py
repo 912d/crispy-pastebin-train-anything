@@ -15,7 +15,7 @@ class PastebinScraper():
 
     def getPasteText(self, paste_key):
         try:
-            req = urllib2.urlopen('https://pastebin.com/raw/' + paste_key, timeout=3)
+            req = urllib2.urlopen('https://scrape.pastebin.com/api_scrape_item.php?i=' + paste_key, timeout=3)
             pasteText = req.read()
             file = open(Properties.pastedirectory + paste_key, "w")
             file.write(pasteText)
@@ -65,7 +65,7 @@ class PastebinScraper():
 
     def getlimiteddata(self):
         limit = 100
-        fetchurl = 'https://pastebin.com/api_scraping.php?limit=' + str(limit)
+        fetchurl = 'https://scrape.pastebin.com/api_scraping.php?limit=' + str(limit)
         req = urllib2.urlopen(fetchurl, timeout=3)
         data = json.loads(req.read())
         return data, limit

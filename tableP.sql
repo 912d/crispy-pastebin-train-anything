@@ -1,4 +1,4 @@
-CREATE TABLE P (
+CREATE TABLE P2 (
 	id BIGINT AUTO_INCREMENT NOT NULL primary key,
 	fullurl VARCHAR(60),
 	pastedate VARCHAR(30),
