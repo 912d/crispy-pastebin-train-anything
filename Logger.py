@@ -11,7 +11,7 @@ def log(header, data):
     url = Properties.restlogger + '/add?header=' + header + '&data=' + data
     print("url: " + url)
     response = urllib2.urlopen(url, timeout=3)
-    if (response.read() == "Log saved"):
+    if response.read() == "Log saved":
         return True
     else:
         return False

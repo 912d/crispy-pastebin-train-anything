@@ -7,26 +7,24 @@ import Logger
 from Properties import Properties
 
 
-class PastebinScraper():
-    # Class Variables
+class PastebinScraper:
     client = None
     cursor = None
     conn = None
 
-    def getPasteText(self, paste_key):
+    def getpastetext(self, paste_key):
         try:
             req = urllib2.urlopen('https://scrape.pastebin.com/api_scrape_item.php?i=' + paste_key, timeout=3)
-            pasteText = req.read()
+            pastetext = req.read()
             file = open(Properties.pastedirectory + paste_key, "w")
-            file.write(pasteText)
+            file.write(pastetext)
             file.close()
-            return pasteText
+            return pastetext
         except IOError as e:
             Logger.log("getPasteText", e)
             print("[!] API Error1:", e)
 
-
-    def initDB(self):
+    def initdb(self):
         Logger.log("initDB", "Initializing database..")
         try:
             self.conn = MySQLdb.connect(
@@ -46,14 +44,13 @@ class PastebinScraper():
             Logger.log("initDB", e)
             print("[!] API Error:", e)
 
-
     def scraper(self):
         data, limit = self.getlimiteddata()
         Logger.log("scraper", "Starting looping through pastes")
 
         for d in range(limit):
             print("date: " + data[d]["date"])
-            txt = self.getPasteText(data[d]["key"])
+            txt = self.getpastetext(data[d]["key"])
             try:
                 self.cursor.execute(u"""INSERT INTO P2 (fullurl, pastedate, pastekey, size, expire, title, syntax, user, txt)
                  VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""", (data[d]["full_url"], data[d]["date"], data[d]["key"], data[d]["size"], data[d]["expire"], data[d]["title"], data[d]["syntax"], data[d]["user"], txt))
@@ -61,7 +58,6 @@ class PastebinScraper():
             except Exception as e:
                 Logger.log("scraper", e)
                 print("[!] API Error3:", e)
-
 
     def getlimiteddata(self):
         limit = 100
@@ -74,7 +70,7 @@ class PastebinScraper():
 if __name__ == "__main__":
     Logger.log("main", "Starting pastebin scrapper")
     paste = PastebinScraper()
-    paste.initDB()
+    paste.initdb()
 
     while True:
         try:

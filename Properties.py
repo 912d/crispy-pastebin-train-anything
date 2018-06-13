@@ -1,7 +1,8 @@
 # -- coding: utf-8 --
 import config
 
-class Properties():
+
+class Properties:
     host = config.host
     user = config.user
     password = config.passwd
